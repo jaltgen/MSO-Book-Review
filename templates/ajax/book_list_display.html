@@ -1,0 +1,9 @@
+    {% for each in data %}
+    <tr >
+      <td><a href="{% url books.views.book_view each.object.pk%}">{{ each.object.title }}</a></td>
+        <td>{{ each.object.autor.name }}</td>
+        <td>{{ each.object.erscheinungsjahr }}</td>
+        <td>{{ each.object.verlag }} {{debug}}</td>
+        <td align="center">{% ifequal each.rating.rating__avg None %}X{% else %}{{ each.rating.rating__avg|floatformat}}{% endifequal %}</td>
+    </tr>
+    {% endfor %}

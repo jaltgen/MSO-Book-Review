@@ -1,0 +1,33 @@
+{% extends "index.html" %}
+
+{% block content %}
+<script type="text/javascript" src="/buecher/media/js/jquery.js"></script>
+<script type="text/javascript">
+	 $(document).ready(function() {
+      get_book_table('title')
+   });
+   
+	function get_book_table(item)
+	{
+		URL_PRESTRING = '{% url books.views.ajax_book_list%}'
+		url = URL_PRESTRING + '?item=' + item 
+		$('#placeholder').load(url)
+	}
+	
+</script>
+
+<h1>Bücher Liste</h1>
+<p>Eine Liste aller Bücher die bereits einen Review haben.</p>
+<table cellspacing="0" width="100%">
+    <thead>
+        <td width="200px">Titel <a onclick="get_book_table('title')">&uarr;</a><a onclick="get_book_table('-title')">&darr;</a></td>
+        <td width="100px">Autor <a onclick="get_book_table('autor')">&uarr;</a><a onclick="get_book_table('-autor')">&darr;</a></td>
+        <td width="50px">Jahr <a onclick="get_book_table('erscheinungsjahr')">&uarr;</a><a onclick="get_book_table('-erscheinungsjahr')">&darr;</a></td>
+        <td width="50px">Verlag <a onclick="get_book_table('verlag')">&uarr;</a><a onclick="get_book_table('-verlag')">&darr;</a></td>
+        <td width="50px">Rating <a onclick="get_book_table('autor')">&uarr;</a><a onclick="get_book_table('-rating')">&darr;</a></td>
+    </thead>
+<tbody id="placeholder">
+	
+</tbody>
+</table>
+{% endblock %}

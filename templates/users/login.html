@@ -1,0 +1,18 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<h2>Login</h2>
+<div id="message_box">
+{% if success  %}
+<h3>Login erfolgreich</h3>
+<p>Du bist nun eingeloggt und kannst den vollen Funktionsumfang des MSO Buchrezensionsportals nutzen.</p>
+{% endif %}
+
+{% if failure  %}
+<h3>Login fehlerhaft</h3>
+<p>Deine Eingabe war fehlerhaft.</p>
+{% endif %}
+
+</div>
+
+{% endblock %}

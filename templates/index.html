@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<title>MSO Buchrezension</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="description" content="Your Website Description" />
+<meta name="keywords" content="keywords, go, here" />
+
+<link rel="stylesheet" href="/buecher/media/images/style.css"> 
+{% block head %}{% endblock %}
+</head>
+
+<body>
+	<div class="content">
+		<div id="top">
+			<div class="topright">
+			 	<a href="#"><img src="/buecher/media/images/sitemap.png" alt="Sitemap" /></a> ^ 
+			 	<a href="#"><img src="/buecher/media/images/rss.png" alt="RSS" /></a>				
+			</div>
+		</div>
+		<div id="header">
+			
+			<div class="headings">
+				<h1>MSO Buchrezension</h1>
+				<h2>Schreib uns, was du liest!</h2>
+			</div>
+		</div>
+	
+			<div id="menu">
+			  	<ul>
+					{% ifequal user.is_active 1%}<li><a href="{% url books.views.bewertung_add %}">Rezension schreiben</a></li>{%endifequal%}
+					<li><a href="{% url books.views.book_list %}">Bücher</a></li>
+					{% ifequal user.is_active 1%}<li><a href="{% url books.views.user_list%}">Benutzer</a></li>{%endifequal%}	
+      			</ul>
+			</div>	
+			
+		<div id="main">
+			<div class="right">
+				
+				
+				<div class="nav">
+					{% ifequal user.is_active 1 %}
+
+<h3>Hallo {{user.first_name}}  <a class="logout" href="{% url books.views.logout_user %}">Ausloggen!</a>
+		</h3><br>
+
+{% else %}
+<h2>Login</h2><br>				
+			<form method="post" action="{% url books.views.login_user %}">
+<input type="text" name="username" value="Benutzername"><input type="password" name="password" value="Passwort">
+<input type="submit" value="Bestätigen"  id="input-button"/>
+<input type="hidden" name="next" value="{% url books.views.render_view %}" />
+</form><br />
+{% endifequal %}
+
+				    {% block nav%}
+				<h2>Neu!</h2>
+				<ul>
+				{% for item in newest %}
+					<li><a href="{% url books.views.book_view item.buch.pk %}">{{item.buch.title}}</a></li>
+				{% endfor %}
+				</ul>
+				<h2>Links</h2>
+					<ul>
+						<li><a href="http://intern.marienschule.com">MSO Intern</a></li>
+						
+						
+					</ul>
+                    {% endblock %}
+				</div>
+			</div>
+			<div class="left">
+<div id="opener_spacer"></div>
+
+		{% block content %}
+				
+				<h2><a href="#">Willkommen!</a></h2>
+				<div class="img_right"><img src="http://zeus/media/images/img.jpg" alt="" /></div>
+Schreib uns, was dich interessiert! <b>An die Tasten, fertig, los!</b>
+
+<p>Sicherlich hast du schon davon gehört: an unserer MSO gibt es ab sofort ein <b>internes Buchbewertungssystem</b>. Hier kannst du: Bücher bewerten, Bewertungen lesen, Deine Lieblingsbücher wählen.</p>
+
+<p>Wie das geht? Poste uns einfach Deine Meinung zu einem Buch, das Dir gut gefallen hat! Alles ist ganz einfach  - logge Dich mit Deinem normalen Benutzernamen und Kennwort ein, klicke in der oberen Leiste auf „Rezension schreiben“ und schon bist Du dabei, eines Deiner Lieblingsbücher weiterzuempfehlen.  Hat ein Buch Dir nicht gefallen, kannst du das natürlich auch kundtun. 
+Lesewürmer aufgepasst: Wer viele gute Rezensionen über verschiedene Bücher innerhalb eines Halbjahres schreibt, kann sich eine Überraschung verdienen!</p>
+
+<p style="font-weight: bold;">Also los – geig‘ uns deine Meinung!</p> {% endblock %}
+			</div>
+			
+		</div>
+		
+		<div id="footer">
+			<div class="info">
+				&copy; 2009 Marienschule Opladen | Jannik Altgen<br />
+				Site Design - <a href="http://www.designcreek.com">DesignCreek</a>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

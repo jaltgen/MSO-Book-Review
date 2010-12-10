@@ -1,0 +1,18 @@
+<table cellspacing="0" style="width:100%;">
+    <thead>
+        <tr>
+            <td>Benutzername</td>
+            <td >Geschriebene Bewertungen</td>
+        </tr>
+    </thead>
+	<tbody 
+		    {% for item in users %}
+    <tr>
+        <td>{{item.username}}</td>
+        <td>{{ item.bewertung_count }}</td>
+    </tr>
+    {% endfor %}
+		
+	</tbody>
+	
+	</table>

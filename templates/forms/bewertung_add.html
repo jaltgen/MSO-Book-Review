@@ -1,0 +1,149 @@
+{% extends "index.html" %}
+
+{% block head %}
+<script type="text/javascript" src="/media/js/jquery.js"></script>
+<script type="text/javascript" src="/media/jquery.autocomplete.js"></script>
+<link rel="stylesheet" href="/media/jquery.autocomplete.css" type="text/css" />
+ <link type="text/css" href="/media/js/jquery-ui/css/start/custom.css" rel="stylesheet" />
+<script type="text/javascript" src="/media/js/markitup/jquery.markitup.js"></script>
+<script type="text/javascript" src="/media/js/markitup/sets/default/set.js"></script>
+<script type="text/javascript" src="/media/js/jquery-ui/js/jquery-ui.js"></script>
+<script type="text/javascript" >
+   $(document).ready(function() {
+   	  
+
+	  
+      $("textarea").markItUp(mySettings);
+	  
+	  
+      var autors = [{% for autor in all_autors %}
+                ["{{ autor.pk }}", "{{ autor }}"]{% if not forloop.last %},{% endif %}
+            {% endfor %}];
+      var verlags = [{% for verlag in all_verlags %}
+                ["{{ verlag.pk }}", "{{ verlag }}"]{% if not forloop.last %},{% endif %}
+            {% endfor %}];
+      
+      var autocomplete_options = {
+            formatItem: function(item) {
+                return item[1];
+            },
+            matchContains: true,
+        }
+      $("#id_{{ form.autor.html_name }}").autocomplete(autors, autocomplete_options);
+      $("#id_{{ form.verlag.html_name }}").autocomplete(verlags, autocomplete_options);
+   });
+   
+   function toggleTR(my_id)
+   {
+   		var my_element = '#'+my_id
+		var file = my_id + '.html'
+   		$(my_element).load('/media/ajax/'+file)
+   }
+   function openDialog(my_id)
+   {
+   	var my_element = '#'+my_id;
+
+$(my_element).dialog({
+			bgiframe: true,
+			resizable: false,
+			modal: true,
+			overlay: {
+				backgroundColor: '#000',
+				opacity: 0.25
+			}});
+   }
+</script>
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="/media/js/markitup/skins/simple/style.css" />
+<link rel="stylesheet" type="text/css" href="/media/js/markitup/sets/default/style.css" />
+
+<h2>Bewertung hinzufügen</h2>
+<form action="{% url books.views.bewertung_add %}" method="POST" enctype="multipart/form-data">
+<fieldset>
+	<legend>Buch</legend>
+	<table cellspacing="0" width="100%" class="form_table">
+		<tr>
+			<td>Title:</td>
+			<td colspan="2">{{form.title}}{{ form.title.errors }} <a onclick="openDialog('title_info')"><img src="/media/images/info-icon.png" width="16px" height="16px" alt="Info"></a>
+			<div style="display:none;" id="title_info" title="Titel"><p>Der Name des Buches</p></div>
+			</td>
+		</tr>
+		<tr>
+			<td>Autor:</td>
+			<td><input size="35" name="{{ form.autor.html_name }}" id="id_{{ form.autor.html_name }}" type="text" /><a onclick="openDialog('autor_info')">
+			<img src="/media/images/info-icon.png" width="16px" height="16px" alt="Info"></a>
+			<div style="display:none;" id="autor_info" title="Autor"><p>Wer hat dein Buch geschrieben? Das müsste vorne auf dem Cover drauf stehen.</p></div></td>
+			</tr>
+			<tr>
+			<td>Verlag:</td>
+			<td><input size="35" name="{{ form.verlag.html_name }}" id="id_{{ form.verlag.html_name }}" type="text" /></td>
+			</tr>
+			
+			<tr>
+				<td >Erscheinungsjahr:</td>
+				<td  colspan="2">{{form.erscheinungsjahr}}{{ form.erscheinungsjahr.errors }}<a onclick="openDialog('erscheinungsjahr_info')"><img src="/media/images/info-icon.png" width="16px" height="16px" alt="Info"></a>
+			<div style="display:none;" id="erscheinungsjahr_info" title="Erscheinungsjahr"><p>Wirf mal einen Blick auf die vorderen oder hinteren Seiten deines Buches. Da müsste das Erscheinungsjahr stehen.</p></div></td>
+			</tr>
+			<tr>
+				<td>Genre:</td>
+				<td>{{form.genre}}{{ form.genre.errors }}<a onclick="openDialog('genre_info')"><img src="/media/images/info-icon.png" width="16px" height="16px" alt="Info"></a></td>
+				<div style="display:none;" id="genre_info" title="Genre"><p>auch „Gattung“ – ist Dein Buch ein Roman wie zum Beispiel „Pippi Langstrumpf“ oder ist Dein Buch ein Sachbuch wie zum Beispiel „Was ist Was?“ Ist Dein Buch vielleicht ein historischer Roman, eine Science-Fiction-Erzählung, oder gar ein Krimi?</p></div>
+			</tr>
+			<tr>
+				<td>Foto:</td>
+				<td>{{form.cover}}{{ form.cover.errors }}<a onclick="openDialog('foto_info')"><img src="/media/images/info-icon.png" width="16px" height="16px" alt="Info"></a></td>
+				<div style="display:none;" id="foto_info" title="Foto"><p> Ein Bild vom Cover Deines Buches wäre super! Schau doch einfach mal unter „Google“ – da findest Du bestimmt ein paar Cover! Speicher eines auf Deinem Rechner ab und lade es hier rechts hoch!</p></div>
+			</tr>
+			<tr>
+				<td>Standort:</td>
+				<td>{{form.standort}}{{ form.standort.errors }}<a onclick="openDialog('standort_info')"><img src="/media/images/info-icon.png" width="16px" height="16px" alt="Info"></a></td>
+				<div style="display:none;" id="standort_info" title="Standort"><p>Wo genau steht dein Buch in der Bibliothek?</p></div>
+			</tr>
+			<tr>
+				<td style="border:0px;">Tags:</td>
+				<td style="border:0px;">{{form.tags}}{{ form.tags.errors }}<a onclick="openDialog('tags_info')"><img src="/media/images/info-icon.png" width="16px" height="16px" alt="Info"></a> Tags mit Kommata trennen!</td>
+				<div style="display:none;" id="tags_info" title="Tags"><p>englisch, „Stützpunkte“ – das heißt so viel wie Schlagwörter. Liest Du ein Buch, in dem es ganz schön kriminell zugeht, wären Deine „Tags“ beispielsweise: Diebstahl, Raub, Axt, Verbrecher, Polizei, Sirenen...</p></div>
+			</tr>
+		</table>
+	</fieldset>
+	<br>
+	<fieldset>
+	<legend>Bewertung</legend>
+	<table cellspacing="0" width="100%" class="form_table">
+		<tr>
+			<td>Titel:</td>
+			<td colspan="2" >{{form.bewertung_title}}{{ form.bewertung_title.errors }}<a onclick="openDialog('b_titel_info')"><img src="/media/images/info-icon.png" width="16px" height="16px" alt="Info"></a></td>
+				<div style="display:none;" id="b_titel_info" title="Titel der Bewertung"><p>mit diesem Titel ist nicht der Name Deines Buches gemeint, sondern Deine persönliche Bewertung! Hat Dir dein Buch gefallen? Versuche hier, Deine Eindrücke in ein, zwei Adjektiven auszudrücken. Zum Beispiel mit: „Mega cool!“ oder „Eher langweilig!“</p></div>
+		</tr>
+		<tr>
+			<td>Punkte:</td>
+			<td><select name="bewertung_rating">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+			</select>{{ form.bewertung_rating.errors }}</td>
+			<td align="right">Von 1 = "Nicht so toll" bis 5 = "Hervorragendes Buch".<a onclick="openDialog('rating_info')"><img src="/media/images/info-icon.png" width="16px" height="16px" alt="Info"></a></td>
+				<div style="display:none;" id="rating_info" title="Ratings"><p>Hier kommst Du zur „richtigen“ Bewertung Deines Buches. Wie viele Punkte möchtest Du geben? Gibt es noch bessere Bücher, oder war Dein letztes Buch wirklich schon eine „5“ wert?</p></div>
+			</tr>
+					<tr>
+			<td>Inhalt:<a onclick="openDialog('inhalt_info')"><img src="/media/images/info-icon.png" width="16px" height="16px" alt="Info"></a></td>
+				<div style="display:none;" id="inhalt_info" title="Inhalt"><p>Versuche hier, ganz strukturiert den Inhalt Deines Buches vorzustellen, ohne natürlich das Ende preiszugeben. Andere möchten ja schließlich vielleicht sogar anhand Deiner Bewertung das Buch auch noch lesen – und die Spannung möchtest Du ihnen ja bestimmt nicht vorweg nehmen!</p></div>
+			<td colspan="2">{{form.bewertung_short}}{{ form.bewertung_short.errors }}</td>
+			</tr>
+			<tr>
+			<td style="border:0px;">Rezension:<a onclick="openDialog('rezension_info')"><img src="/media/images/info-icon.png" width="16px" height="16px" alt="Info"></a></td>
+				<div style="display:none;" id="rezension_info" title="Rezension"><p>Auch hier geht es an Deine eigentliche schriftliche Bewertung. Hier findest Du Platz, nochmal ganz genau aufzuschreiben, was Du gut oder auch nicht so gelungen an deinem letzten Buch findest. Warum hat Dir das Buch so gut gefallen? War es besonders spannend, oder traurig? Besonders lustig, oder gruselig? Schreibe uns Deine Meinung!</p></div>
+			<td style="border:0px;" colspan="2">{{form.bewertung_rezension}} Deine Bewertung des Buches</textarea>{{ form.bewertung_rezension.errors }}</td>
+			</tr>
+		</table>
+	</fieldset>
+	<br>
+	<input type="submit" value="Speichern">
+	</form>
+	
+	
+{% endblock %}

@@ -1,0 +1,8 @@
+{% for item in comments%}
+
+<h3>{{item.kommentar}} - {{item.rating}}</h3>
+{{item.benutzer}}<br>
+<p>{{item.rezension}}</p>
+<hr>
+{% endfor %}
+

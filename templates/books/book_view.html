@@ -1,0 +1,84 @@
+	{% extends "index.html" %}
+{% block content %}
+
+ <link type="text/css" href="/buecher/media/js/jquery-ui/css/start/custom.css" rel="stylesheet" />
+ <script type="text/javascript" src="/buecher/media/js/jquery-ui/js/jquery-1.3.2.min.js"></script>
+<script type="text/javascript" src="/buecher/media/js/jquery-ui/js/jquery-ui.js"></script>
+<script type="text/javascript">
+		
+	$(function() {
+		$("#accordion").accordion({header: 'h2'});
+	});
+	
+	function write_comment()
+	{
+		$('#form_field').toggle()
+	}
+	</script>
+
+		<p>
+
+<h2>{{ book.title }}</h2>
+<h3>{{ book.autor.name }}, {{ book.erscheinungsjahr }}, {{book.verlag}}</h3>
+<div style="float:left;"><img src="/buecher/media/upload/{{book.cover}}" width="100" ><br>
+<table cellpadding="0" style="margin-left:-0px;" >{% for book in reviews %}
+    <tr><td>Wann?</td><td>{{book.datum|date:"d. N Y"}}</td></tr>
+    <tr><td>Wer?</td><td>{{book.benutzer.first_name}}</td></tr>
+	<tr><td>Wo?</td><td>{{book.buch.standort}}</td></tr>
+    {%endfor %}
+</table>
+</div>
+{% for item in reviews %}
+<div id="accordion" style="float:right; width: 425px;">
+	<h2><a href="#">Kurz und knapp</a></h2>
+	<div>
+	<p>{{ item.short}}</p>
+</div>
+<h2><a href="#">Rezension</a></h2>
+	<div>
+	<p>{{ item.kommentar}}</p>
+</div>
+<br /><a onclick="write_comment()"><img src="/buecher/media/images/icon_addlink.gif" alt="Pluszeichen" border="0"> Kommentar</a>
+
+<div id="form_field" style="display:none;">
+
+	<fieldset>
+	<legend>Kommentar hinzufügen: </legend>
+	<table cellspacing="0" width="100%" class="form_table">
+<tr>
+	<td>Titel:</td>
+	<td><form action="{% url books.views.ajax_comment_add%}" method="POST"><input size="35" name="{{ form.kommentar_title.html_name }}" id="id_{{ form.kommentar_title.html_name }}" type="text" /></td>
+<tr>	
+	<td>Punkte:</td>
+			<td><select name="kommentar_rating">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+			</select>{{ form.bewertung_rating.errors }}</td>
+</tr>
+<tr>
+	<td style="border:0px;">Kommentar:</td>
+	<td style="border:0px;"><input size="35" name="{{ form.kommentar_rezension.html_name }}" id="id_{{ form.kommentar_rezension.html_name }}" type="text" /></td>
+</tr>
+</table>
+<input type="hidden" name="kommentar_buch" value="{{book.pk}}">
+<input type="submit" value="Speichern">
+</form>
+</fieldset>
+</div>
+
+<div id="comment_holder">
+    <br>
+	{% for item in comments %}
+    <h3>{{item.schlagsatz}} - {{item.rating}} - {{item.benutzer}}</h3>
+<p>{{item.kommentar}}</p>
+<hr>
+{% endfor %}
+	
+</div>
+
+</div>
+{% endfor %}
+{% endblock %}

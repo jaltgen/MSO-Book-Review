@@ -1,0 +1,66 @@
+{% extends "index.html" %}
+{% block content %}
+ <link type="text/css" href="/media/js/jquery-ui/css/start/custom.css" rel="stylesheet" />
+ <script type="text/javascript" src="/media/js/jquery-ui/js/jquery-1.3.2.min.js"></script>
+<script type="text/javascript" src="/media/js/jquery-ui/js/jquery-ui.js"></script>
+<script type="text/javascript">
+ 	 $(document).ready(function() {
+      $('#placeholder').tabs({ fx: { opacity: 'toggle' } })
+   });
+</script>
+
+<h2>Benutzerübersicht</h2><br>
+
+<div id="placeholder">     <ul>
+         <li><a href="#username"><span>Nach Benutzername</span></a></li>
+         <li><a href="#bewertungen"><span>Nach Rezensionen</span></a></li>
+     </ul>
+	 <div id="username">
+				 <table id="user_list" cellspacing="0" style="width:100%;">
+			    <thead>
+			        <tr>
+			            <td>Benutzername</td>
+			            <td >Geschriebene Bewertungen</td>
+			        </tr>
+			    </thead>
+				<tbody >
+					   {% for item in users_by_username %}
+			    <tr>
+			        <td style="border: 0px;">{{item.username.first_name}} {{item.username.last_name}}</td>
+			        <td style="border: 0px;">{{ item.username.bewertung_count }}</td>
+			    </tr>
+			    <tr>
+				<td colspan="2" class="book_list"><ul>{% for thing in item.buecher %}<li><a href="{% url books.views.book_view thing.pk%}"> {{ thing.title}}</a></li>{% endfor %}</td>			    
+
+</tr>
+			    {% endfor %}
+					
+				</tbody>
+				
+				</table>
+	 </div>
+	  <div id="bewertungen">
+				 <table cellspacing="0" style="width:100%;">
+			    <thead>
+			        <tr>
+			            <td>Benutzername</td>
+			            <td >Geschriebene Bewertungen</td>
+			        </tr>
+			    </thead>
+				<tbody >
+					   {% for item in users_by_rating %}
+			    <tr>
+			        <td style="border:0px;">{{item.username.first_name}} {{item.username.last_name}}</td>
+			        <td style="border:0px;">{{ item.username.bewertung_count }}</td>
+			    </tr>
+				    <tr> </tr>
+				<td colspan="2" class="book_list"><ul>{% for thing in item.buecher %}<li> <a href="{% url books.views.book_view thing.pk %}">{{ thing.title}}</a></li>{% endfor %}</td>			    
+			    {% endfor %}
+
+					
+				</tbody>
+				
+				</table>
+	 </div>
+  </div>
+	{% endblock %}
